@@ -224,12 +224,12 @@ userRouter.delete("/:id", async (req, res) => {
 console.log({ __dirname });
 userRouter.post("/upload-by-link", async (req, res) => {
   const { link } = req.body;
-  const newName = Date.now() + ".jpg";
+  const newName = 'photo'+Date.now() + ".jpg";
   await imageDownloader.image({
     url: link,
-    dest: dirname + "/uploads/" + newName,
+    dest: dirname + "\\uploads\\" + newName,
   });
-  res.json(dirname + "/uploads/" + newName);
+  res.json(newName);
 });
 
 const photosMiddleware = multer({ dest: "uploads/" });
@@ -238,6 +238,7 @@ userRouter.post(
   photosMiddleware.array("photos", 100),
   (req, res) => {
     const uploadedFiles = [];
+    console.log('req.files', req.files);
     for (let i = 0; i < req.files.length; i++) {
       const { path, originalname } = req.files[i];
       const parts = originalname.split(".");

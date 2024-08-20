@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 require("dotenv").config();
 const cookieParser = require("cookie-parser");
+const multer = require('multer');
 
 const cors = require("cors");
 
@@ -13,6 +14,9 @@ const userRouter = require('./routes/userRouter');
 
 
 app.use(express.json());
+app.use('/uploads', express.static(__dirname+ '/uploads'));
+console.log('dir name in app.js', __dirname);
+
 app.use(cookieParser());
 
 app.use(
