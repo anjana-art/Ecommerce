@@ -10,6 +10,8 @@ const cors = require("cors");
 const { PORT } = process.env;
 
 const userRouter = require('./routes/userRouter');
+const productRouter = require('./routes/productRouter');
+
 
 
 
@@ -27,6 +29,8 @@ app.use(
   );
 
   app.use('/api/users', userRouter);
+  app.use('/api/products', productRouter);
+
 
 
  app.get("/test", (req, res) => {

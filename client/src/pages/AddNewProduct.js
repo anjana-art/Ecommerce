@@ -1,50 +1,51 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
+import PhotoUploader from "../components/PhotoUploader";
+import { Navigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import ProfileNav from "../components/ProfileNav";
 
 const AddNewProduct = () => {
+  const {id} = useParams();
+  console.log({id});
   const [title, setTitle] = useState("");
   const [catagory, setCatagory] = useState("");
   const [addedPhotos, setAddedPhotos] = useState([]);
-  const [photoLink, setPhotoLink] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
+  const [redirect, setRedirect] = useState(false);
 
-  async function addPhotoByLink(ev) {
+  useEffect(()=>{
+    if(!id){
+        return;
+    }
+    axios.get('/api/products/allProducts/'+id).then(response =>{
+      const {data}= response;
+
+      setTitle(data.title);
+      setCatagory(data.catagory);
+      setAddedPhotos(data.photos);
+      setDescription(data.description);
+      setPrice(data.price);
+    })
+  },[id])
+
+  async function handelSubmit(ev) {
     ev.preventDefault();
-    const { data: filename } = await axios.post("/api/users/upload-by-link", {
-      link: photoLink,
-    });
-    setAddedPhotos((prev) => {
-      return [...prev, filename];
-    });
-    setPhotoLink("");
+    const productData = { title, catagory, addedPhotos, description, price };
+     await axios.post("/api/products/addNewProduct", productData);
+    setRedirect(true);
   }
 
-  function uploadPhoto(ev) {
-    const files = ev.target.files;
-    console.log('target.files' , files);
-    const data = new FormData();
-    for (let i = 0; i < files.length; i++) {
-      data.append("photos", files[i]);
-    }
-    axios.post("/api/users/upload", data, {
-        headers: { "Content-Type": "multipart/form-data" },
-      })
-      .then(response => {
-        const { data:filenames} = response;
-        console.log('response.data', response.data);
-        console.log("data", filenames);
-
-        setAddedPhotos((prev) => {
-          return [...prev, ...filenames];
-        });
-      });
+  if (redirect) {
+    return <Navigate to={"/api/products/allProducts"} />;
   }
 
   return (
-    <div>
+    <div className="mt-4">
+      <ProfileNav/>
       <h2 className="text-xl text-center p-3">Add New Product</h2>
-      <form>
+      <form onSubmit={handelSubmit}>
         <div>
           <h2 className="text-2xl">Title</h2>
           <p className="text-gray-500 text-sm">
@@ -62,7 +63,7 @@ const AddNewProduct = () => {
         <p className="text-gray-500 text-sm">catagory of product</p>
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2 items-center cursor-pointer">
           <div className=" flex border px-4 py-2  rounded-full">
-            <input
+            < input 
               className="mr-1"
               type="radio"
               id="iphone"
@@ -88,7 +89,7 @@ const AddNewProduct = () => {
             <label for="iphone">iphone</label>
           </div>
           <div className=" flex border px-4 py-2  rounded-full">
-            <input
+            < input 
               className="mr-1"
               type="radio"
               id="android"
@@ -114,7 +115,7 @@ const AddNewProduct = () => {
             <label for="android">android</label>
           </div>
           <div className=" flex border px-4 py-2  rounded-full">
-            <input
+            < input 
               className="mr-1"
               type="radio"
               id="laptop"
@@ -140,7 +141,7 @@ const AddNewProduct = () => {
             <label for="laptop">laptop</label>
           </div>
           <div className=" flex border px-4 py-2  rounded-full">
-            <input
+            < input 
               className="mr-1"
               type="radio"
               id="other"
@@ -166,59 +167,8 @@ const AddNewProduct = () => {
             <label for="other">other</label>
           </div>
         </div>
-        <h2 className="mt-5 text-2xl">Photos</h2>
-        <p className="text-gray-500 text-sm">more = better</p>
-        <div className="flex gap-2">
-          <input
-            type="text"
-            placeholder="add using link ....jpg , jpeg"
-            value={photoLink}
-            onChange={(ev) => setPhotoLink(ev.target.value)}
-          />
-          <button
-            onClick={addPhotoByLink}
-            className="bg-gray-200 p-4 rounded-2xl"
-          >
-            Add&nbsp;Photo
-          </button>
-        </div>
-        <div className="mt-2  grid  gap-2 grid-cols-2 md:grid-3 lg:grid-cols-6">
-          {addedPhotos.length > 0 &&
-            addedPhotos.map((link) => (
-              <div>
-                <div>
-                  <img
-                    className="border rounded-2xl "
-                    src={"http://localhost:5555/uploads/" + link}
-                    alt='phone/laptop/other' 
-                  />
-                </div>
-              </div>
-            ))}
-          <label className=" cursor-pointer flex  items-center justify-center border bg-transparent rounded-2xl p-2 text-2xl text-gray-500 gap-1">
-            <input
-              type="file"
-              multiple
-              className="hidden"
-              onChange={uploadPhoto}
-            />
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="size-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z"
-              />
-            </svg>
-            Upload
-          </label>
-        </div>
+        <PhotoUploader addedPhotos={addedPhotos} onChange={setAddedPhotos} />
+
         <h2 className="mt-5 text-2xl">Description:</h2>
         <p className="text-gray-500 text-sm">
           all the information about product

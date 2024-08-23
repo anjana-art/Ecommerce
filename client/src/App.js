@@ -9,7 +9,8 @@ import axios from "axios";
 import { UserContextProvider } from "./UserContext.js";
 import AllProducts from "./pages/AllProducts.js";
 import MyOrder from "./pages/MyOrder.js";
-import AddProduct from "./pages/AddNewProduct.js";
+import AddNewProduct from "./pages/AddNewProduct.js";
+import MyListings from "./pages/MyListings.js";
 
 axios.defaults.baseURL = "http://localhost:5555";
 axios.defaults.withCredentials = true;
@@ -28,9 +29,12 @@ function App() {
             <Route path="/api/users/login" element={<LoginPage />}></Route>
             <Route path="/api/users/register" element={<RegisterPage />}></Route>
             <Route path="/api/users/profile" element={<ProfilePage />}></Route>
-            <Route path="/api/users/allProducts" element={<AllProducts />}></Route>
-            <Route path="/api/users/myOrders" element={<MyOrder />}></Route>
-            <Route path="/api/users/addNewProduct" element={<AddProduct />}></Route>
+            <Route path="/api/products/allProducts" element={<AllProducts />}></Route>
+            <Route path="/api/products/myListings" element={<MyListings />}></Route>
+            <Route path="/api/products/myOrders" element={<MyOrder />}></Route>
+            <Route path="/api/products/addNewProduct" element={<AddNewProduct />}></Route>
+            <Route path="/api/products/allProducts/:id" element={<AddNewProduct />}></Route>
+
 
 
 
