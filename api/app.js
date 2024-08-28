@@ -11,6 +11,8 @@ const { PORT } = process.env;
 
 const userRouter = require('./routes/userRouter');
 const productRouter = require('./routes/productRouter');
+const cartRouter = require('./routes/cartRouter');
+
 
 
 
@@ -30,6 +32,7 @@ app.use(
 
   app.use('/api/users', userRouter);
   app.use('/api/products', productRouter);
+  app.use('/api/cart', cartRouter);
 
 
 

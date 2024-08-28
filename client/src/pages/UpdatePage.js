@@ -1,11 +1,12 @@
-import React, {  useState } from "react";
+import React from "react";
+import ProfileNav from "../components/ProfileNav";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import PhotoUploader from "../components/PhotoUploader";
 import { Navigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
-import ProfileNav from "../components/ProfileNav";
 
-const AddNewProduct = () => {
+const ProductViewPage = () => {
   const { id } = useParams();
   console.log({ id });
   const [title, setTitle] = useState("");
@@ -15,17 +16,28 @@ const AddNewProduct = () => {
   const [price, setPrice] = useState("");
   const [redirect, setRedirect] = useState(false);
 
-  
+  useEffect(() => {
+    if (!id) {
+      return;
+    }
+    axios.get("/api/products/allProducts/" + id).then((response) => {
+      const { data } = response;
 
-  async function NewProduct(ev) {
+      setTitle(data.title);
+      setCatagory(data.catagory);
+      setAddedPhotos(data.photos);
+      setDescription(data.description);
+      setPrice(data.price);
+    });
+  }, [id]);
+
+  async function saveProduct(ev) {
     ev.preventDefault();
     const productData = { title, catagory, addedPhotos, description, price };
 
-   
-      await axios.post("/api/products/addNewProduct", productData);
-      setRedirect(true);
-    }
-  
+    await axios.put("/api/products/myListings/"+id ,  { ...productData });
+    setRedirect(true);
+  }
 
   if (redirect) {
     return <Navigate to={"/api/products/allProducts"} />;
@@ -34,8 +46,8 @@ const AddNewProduct = () => {
   return (
     <div className="mt-4">
       <ProfileNav />
-      <h2 className="text-xl text-center p-3">Add New Product</h2>
-      <form onSubmit={NewProduct}>
+      <h2 className="text-xl text-center p-3">Product View/ Update</h2>
+      <form onSubmit={saveProduct}>
         <div>
           <h2 className="text-2xl">Title</h2>
           <p className="text-gray-500 text-sm">
@@ -182,4 +194,4 @@ const AddNewProduct = () => {
   );
 };
 
-export default AddNewProduct;
+export default ProductViewPage;

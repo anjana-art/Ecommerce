@@ -46,11 +46,11 @@ const createUser = async (user) => {
   }
 };
 
-const updateUser = async (id,{body}) => {
+const updateUser = async (id,{title, catagory, photos, description, price}) => {
   try {
     await mongoose.connect(MONGODB_CONNECTION_URI);
 
-    return await UserModel.findByIdAndUpdate(id, {body} );
+    return await UserModel.findByIdAndUpdate(id,{title, catagory, photos, description, price});
   } catch (error) {
     console.log(error);
     throw error;

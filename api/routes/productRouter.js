@@ -25,6 +25,8 @@ productRouter.get("/allProducts", async (req, res) => {
 
 });
 
+
+
 productRouter.post(
   "",
   (req, res, next) => {
@@ -178,39 +180,51 @@ productRouter.get("/allProducts/:id", async (req, res) => {
 
 });
 
-productRouter.put("/myListings", async (req, res) => {
-  const { token } = req.cookies;
-  const { id, title, catagory, addedPhotos, price, description } = req.body;
-  const jwtSecret = " asldkfjlskdjfad this is jwtSecret.";
+productRouter.put("/myListings/:id", async (req, res) => {
+    const productId = req.params.id;
+    console.log('productId', req.params.id);
+    const { token } = req.cookies;
+    const {title, catagory, addedPhotos, description, price} = req.body;
+
+    console.log('title:', title);
+    console.log('description:', description);
+    const jwtSecret = " asldkfjlskdjfad this is jwtSecret.";
 
   jsonwebtoken.verify(token, jwtSecret, {}, async (err, userData) => {
     if (err) throw err;
+    const userId = userData.id;                                
 
-    const productDoc = await getProductById(id);
+     console.log('userid', userId);
+    const productDoc = await getProductById(productId);
+    console.log('productDoc', productDoc);
+
+/*     console.log(productDoc.seller.toString())
+    console.log(userData.id ) */
 
     if (userData.id === productDoc.seller.toString()) {
-      const photos = addedPhotos;
 
-/* 
-       productDoc.set({
+
+      const photos = addedPhotos;
+   
+
+   /*    productDoc.set({
         title,
         catagory,
         photos,
         price,
         description,
       });
-      await productDoc.save(); */
-      
-       const {id} = userData;
 
-     const updated =  await updateProduct({seller:id, title,
-      catagory,
-      photos,
-      price,
-      description,}); 
-     console.log("Successfully Updated Product:", updated); 
+     await  productDoc.save(); */
+    
+      
+        const userId = userData.id;
+        const id = productId;
+
+     const updated =  await updateProduct(id,{title, catagory, photos, description, price});  
 
       res.json("ok");
+      console.log('updated product', updated)
     } else{
       console.log("Not authorized to make a change");
     }

@@ -1,8 +1,7 @@
 const mongoose = require("mongoose");
-const Product = require('../models/ProductModel');
-const ProductModel = require('../models/ProductModel');
-const productId = mongoose.Schema.Types.ObjectId
-
+const Product = require("../models/ProductModel");
+const ProductModel = require("../models/ProductModel");
+const productId = mongoose.Schema.Types.ObjectId;
 
 const CONNECTION_URI = process.env.MONGODB_CONNECTION_URI;
 
@@ -16,7 +15,7 @@ const getProducts = async () => {
   } finally {
     await mongoose.connection.close();
   }
-}
+};
 
 const getProductById = async (id) => {
   try {
@@ -28,20 +27,19 @@ const getProductById = async (id) => {
   } finally {
     await mongoose.connection.close();
   }
-}
+};
 
-const getProductsBySellerId = async ({id}) => {
+const getProductsBySellerId = async ({ id }) => {
   try {
     await mongoose.connect(CONNECTION_URI);
 
-    return await ProductModel.find({seller:id});
+    return await ProductModel.find({ seller: id });
   } catch (error) {
     console.error(error);
   } finally {
     await mongoose.connection.close();
   }
-}
-
+};
 
 const createProduct = async ({
   seller,
@@ -61,26 +59,22 @@ const createProduct = async ({
       photos,
       price,
       description,
-
     });
-    await product.save()
-  
+    await product.save();
+
     return product;
   } catch (error) {
     console.error(error);
   } finally {
     await mongoose.connection.close();
   }
-}
+};
 
- const updateProduct = async (body) => {
+const updateProduct = async (id, {title, catagory, photos, description, price}) => {
   try {
     await mongoose.connect(CONNECTION_URI);
 
-    const product = await ProductModel.updateOne(body);
-
-   
-  
+    const product = await ProductModel.findByIdAndUpdate(id, {title, catagory, photos, description, price});
     return product;
   } catch (error) {
     console.log(error);
@@ -88,13 +82,12 @@ const createProduct = async ({
   } finally {
     await mongoose.connection.close();
   }
-}; 
-
+};
 
 module.exports = {
   getProducts,
   getProductById,
   createProduct,
   updateProduct,
-  getProductsBySellerId
-}
+  getProductsBySellerId,
+};
