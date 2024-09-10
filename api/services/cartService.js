@@ -6,9 +6,9 @@ const Product = require('../models/ProductModel');
 
 const { MONGODB_CONNECTION_URI } = process.env;
 
-function CartFun(){
-    return 'Cart';
+async function findUser(){
+   const customerCart= await Cart.findOne({id});
 }
 
-module.exports = {CartFun };
+module.exports = { findUser };
 

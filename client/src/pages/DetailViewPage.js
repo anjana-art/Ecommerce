@@ -3,6 +3,9 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import AllProducts from "./AllProducts";
+import { useContext} from "react";
+import { CartContext } from "../CartContext";
+
 
 const DetailViewPage = () => {
   const [product, setProduct] = useState([]);
@@ -32,6 +35,11 @@ const DetailViewPage = () => {
       setCreated(data.created);
     });
   }, [id]);
+
+  const {addProduct} = useContext(CartContext);
+  function addToCart(){
+     addProduct(product._id)
+  }
 
   return (
     <>
@@ -65,7 +73,7 @@ const DetailViewPage = () => {
 
         <div className="flex gap-2 p-5 m-5">
             <button className="p-2 bg-primary rounded-2xl text-white">Buy Now</button>
-            <button className="p-2 bg-primary rounded-2xl text-white">Add to Cart</button>
+            <button onClick={()=> addProduct(id)} className="p-2 bg-primary rounded-2xl text-white">Add to Cart</button>
         </div>
       </div>
     </>
