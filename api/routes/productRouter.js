@@ -180,6 +180,13 @@ productRouter.get("/allProducts/:id", async (req, res) => {
 
 });
 
+productRouter.get("/getProductById", async (req, res) => {
+  const { id } = req.params;
+  res.json(await getProductById(id));
+ 
+
+});
+
 productRouter.put("/myListings/:id", async (req, res) => {
     const productId = req.params.id;
     console.log('productId', req.params.id);

@@ -7,6 +7,7 @@ import { useContext } from "react";
 
 const AllProducts = () => {
   const [products, setProducts] = useState([]);
+
   useEffect(() => {
     axios.get("/api/products/allProducts").then(({data}) => {
       setProducts(data);
@@ -17,8 +18,10 @@ const AllProducts = () => {
 
  const {addProduct} = useContext(CartContext);
   function addToCart(){
-     addProduct(products._id)
+     addProduct(products._id);
+     console.log('products.id', products._id);
   }
+
 
   return (
     <>
