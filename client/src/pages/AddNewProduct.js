@@ -6,8 +6,8 @@ import { useParams } from "react-router-dom";
 import ProfileNav from "../components/ProfileNav";
 
 const AddNewProduct = () => {
-  const { id } = useParams();
-  console.log({ id });
+  /* const { id } = useParams();
+  console.log({ id }); */
   const [title, setTitle] = useState("");
   const [catagory, setCatagory] = useState("");
   const [addedPhotos, setAddedPhotos] = useState([]);

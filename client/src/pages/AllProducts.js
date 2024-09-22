@@ -4,19 +4,22 @@ import ProfileNav from "../components/ProfileNav";
 import axios from "axios";
 import { CartContext } from "../CartContext";
 import { useContext } from "react";
+import { ShopContext } from "../ShopContext";
 
 const AllProducts = () => {
-  const [products, setProducts] = useState([]);
+  /*  const [products, setProducts] = useState([]);
 
   useEffect(() => {
     axios.get("/api/products/allProducts").then(({data}) => {
       setProducts(data);
-      console.log('data of products in all products page', data);
+       console.log('data of products in all products page', data); 
     });
-  }, []);
-
+  }, []); */
+ 
 
  const {addProduct} = useContext(CartContext);
+ const {products} = useContext(ShopContext);
+
   function addToCart(){
      addProduct(products._id);
      console.log('products.id', products._id);

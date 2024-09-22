@@ -14,7 +14,9 @@ import MyListings from "./pages/MyListings.js";
 import UpdatePage from "./pages/UpdatePage.js";
 import DetailViewPage from "./pages/DetailViewPage.js";
 import { CartContextProvider } from "./CartContext.js";
+import {ShopContextProvider} from "./ShopContext.js";
 import CartPage from "./pages/CartPage.js";
+import ShopCategory from "./pages/ShopCategory.js";
 
 axios.defaults.baseURL = "http://localhost:5555";
 axios.defaults.withCredentials = true;
@@ -27,6 +29,7 @@ function App() {
   return (
     <UserContextProvider>
       <CartContextProvider>
+        <ShopContextProvider>
       <Router>
         <Routes>
           <Route path="/" element={<Layout />}>
@@ -41,16 +44,12 @@ function App() {
             <Route path="/api/products/myListings/:id" element={<UpdatePage />}></Route>
             <Route path="/api/products/allProducts/:id" element={<DetailViewPage/>}></Route> 
             <Route path="/api/products/cart" element={<CartPage />}></Route>
-
-
-
-
-
-
-
+            <Route path="/api/products/:catagory" element={<ShopCategory />}></Route>
+            
           </Route>
         </Routes>
       </Router>
+      </ShopContextProvider>
       </CartContextProvider>
     </UserContextProvider>
   );

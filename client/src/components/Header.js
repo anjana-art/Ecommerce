@@ -31,14 +31,28 @@ const Header = () => {
       </Link>
 
       <div className="flex gap-2 border border-gray-300 rounded-full py-2 px-4 shadow-md shadow-gray-300">
-        <div>Iphones</div>
+        <Link to={"/api/products/iphone"}>Iphones</Link>
         <div className=" border-l border-gray-300"></div>
-        <div>Androids</div>
+        <Link to={"/api/products/android"}>Androids</Link>
         <div className=" border-l border-gray-300"></div>
-        <div>Laptops</div>
+        <Link to={"/api/products/laptop"}>Laptops</Link>
         <div className=" border-l border-gray-300"></div>
-        <div>Others</div>
+        <Link to={"/api/products/other"}>Others</Link>
         <div className=" border-l border-gray-300"> </div>
+        <div className='flex gap-2'> filter <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="size-6"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+            />
+          </svg></div>
         <button className="bg-primary text-white p-2 rounded-full p-1">
           <svg
             xmlns="http://www.w3.org/2000/svg"
