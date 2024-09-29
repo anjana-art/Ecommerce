@@ -4,26 +4,27 @@ import axios from "axios";
 import { UserContext } from "../UserContext";
 import { CartContext } from "../CartContext";
 
-
 const LandingPage = () => {
   const [products, setProducts] = useState([]);
   const { user } = useContext(UserContext);
 
-
   useEffect(() => {
     axios.get("/api/products/allProducts").then(({ data }) => {
       setProducts(data);
-      console.log("data of products in all products page", data);
+
+      console.log("data of products in landing page", data);
     });
   }, []);
 
-
-  const {addProduct} = useContext(CartContext);
-  function addToCart(){
-     addProduct(products._id);
-     console.log('products.id', products._id);
-  }
-
+  const { addProduct, addProductToCart } = useContext(CartContext);
+  
+   function addToCart(){
+      addProduct(products._id);
+    console.log("cart product", products._id);
+ 
+  } 
+/*   const {_id} = products;
+ */  
 
   return (
     <div>
@@ -33,6 +34,7 @@ const LandingPage = () => {
         {products.length > 0 &&
           products.map((product) => (
             <div className="bg-gray-200 p-4 m-3 rounded-2xl gap-4">
+
               <Link
                 to={"/api/products/allProducts/" + product._id}
                 className=" flex bg-gray-200 p-4 m-3 rounded-2xl gap-4 cursor-pointer"
@@ -54,13 +56,12 @@ const LandingPage = () => {
                 </div>
               </Link>
 
-             
-                <button
-                  className="bg-red-500 bg-opacity-90 rounded-2xl cursor-pointer text-white p-2 mb-2 ml-5" onClick={addToCart}
-                >
-                  Add to Cart
-                </button>
-               
+              <button
+                className="bg-red-500 bg-opacity-90 rounded-2xl cursor-pointer text-white p-2 mb-2 ml-5"
+                onClick={()=>addProductToCart(product._id)}
+              >
+                Add to Cart
+              </button>
             </div>
           ))}
       </div>

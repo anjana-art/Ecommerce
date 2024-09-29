@@ -17,7 +17,7 @@ const AllProducts = () => {
   }, []); */
  
 
- const {addProduct} = useContext(CartContext);
+ const {addProduct, addProductToCart} = useContext(CartContext);
  const {products} = useContext(ShopContext);
 
   function addToCart(){
@@ -81,7 +81,7 @@ const AllProducts = () => {
           </div>
 
             </Link>
-            <button  className="bg-red-500 bg-opacity-90 rounded-2xl cursor-pointer text-white p-2 mb-2 ml-5"  onClick={addToCart}>
+            <button  className="bg-red-500 bg-opacity-90 rounded-2xl cursor-pointer text-white p-2 mb-2 ml-5"  onClick={addProductToCart}>
             Add to Cart 
            </button>
            </div>

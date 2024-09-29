@@ -1,5 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const jsonwebtoken = require("jsonwebtoken");
 
 const { findUser,addToCart } = require("../services/cartService");
 const { getProductById } = require("../services/productService");
@@ -20,10 +21,10 @@ const cartRouter = express.Router();
 
 }) */
 
-cartRouter.post("/", (req, res) => {
+ cartRouter.post("/addToCart", (req, res) => {
   try {
     const { token } = req.cookies;
-    const { productId, quantity, price, title } = req.body;
+    const { productId, items, userId } = req.body;
     const jwtSecret = " asldkfjlskdjfad this is jwtSecret.";
 
     const productInfo = jsonwebtoken.verify(
@@ -35,16 +36,15 @@ cartRouter.post("/", (req, res) => {
         const userId = userData.id;
        // const photos = addedPhotos;
         const CartDoc = await addToCart({
-          userId,
-          productId,
-          quantity,
-          title,
-          price,
+          userId,productId
+         
         });
-        console.log("added product to cart", CartDoc);
+        console.log("added userId and productid to token", token);
       }
     );
-    res.json("Add to cart");
+    res.status(200).json(productInfo);
+    console.log('product Info:', productInfo)
+
   } catch (error) {
     console.error(error);
     res.status(500).send({
@@ -52,6 +52,8 @@ cartRouter.post("/", (req, res) => {
       data: error,
     });
   }
-});
+}); 
+
+
 
 module.exports = cartRouter;
