@@ -3,9 +3,13 @@ import axios from "axios";
 
 export const ShopContext = createContext('');
 
+
+
+
 export const ShopContextProvider = ({children})=>{
     const [products, setProducts] = useState([]);
     const [ready, setReady] = useState('');
+    const [productCatagory, setProductCatagory] = useState([]);
 
 
     useEffect(() => {
@@ -17,9 +21,21 @@ export const ShopContextProvider = ({children})=>{
           });
         
       }, []);
+     
+       useEffect(() => {
+        
+          axios.get("/api/products/catagory").then(({data}) => {
+            setProductCatagory(data);
+            setReady('ready');
+            console.log('Products By Catagory', data)
+          });
+        
+      }, []);
+
+
 
       return (
-        <ShopContext.Provider value ={{products, setProducts, ready}}>
+        <ShopContext.Provider value ={{products, setProducts, productCatagory,ready}}>
             {children}
         </ShopContext.Provider>
       )

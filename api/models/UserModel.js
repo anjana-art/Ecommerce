@@ -23,7 +23,15 @@ const UserSchema = new mongoose.Schema({
     type: Boolean,
     default: true,
   },
-//products:[{type:mongoose.Schema.Types.ObjectId, ref:'Product'}]
+   
+  orders: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Order'
+  }],
+products:[{
+  type:mongoose.Schema.Types.ObjectId,
+   ref:'Product'
+  }],
 });
 
 UserSchema.methods = {

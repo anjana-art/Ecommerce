@@ -20,6 +20,9 @@ const {
   getUserbyId,
 } = require("../services/userService");
 
+const { mergeUserCartAfterLogin } = require('../services/cartService');
+
+
 const dirname = "C:\\Users\\bhatt\\OneDrive\\Desktop\\ecommerce\\api";
 
 userRouter.get("", async (req, res) => {
@@ -60,7 +63,7 @@ userRouter.post("/register", async (req, res) => {
   }
 });
 
-userRouter.post("/login", async (req, res) => {
+/* userRouter.post("/login", async (req, res) => {
   const { body } = req;
   const { email, password } = req.body;
   const userDoc = await findUser({ email });
@@ -70,27 +73,90 @@ userRouter.post("/login", async (req, res) => {
     const userToken = await authenticateUser(body);
     console.log("userToken", userToken);
 
-    if (userToken) {
-      jsonwebtoken.sign(
-        {
-          email: userDoc.email,
-          id: userDoc._id,
-          firstName: userDoc.firstName,
-          lastName: userDoc.lastName,
-        },
-        jwtSecret,
-        {},
-        (err, token) => {
-          if (err) throw err;
-          res.cookie("token", token, { httpOnly: true }).json(userDoc);
-          console.log("token", token);
-        }
-      ); //assigning cookie
+    
+
+     if (userToken) { 
+              jsonwebtoken.sign({
+                  email: userDoc.email,
+                  _id: userDoc._id,
+                  firstName: userDoc.firstName,
+                  lastName: userDoc.lastName,
+              }, jwtSecret, {}, (err, token) => {
+            if (err) {
+                console.error("JWT Error:", err);
+                return res.status(500).json("Token generation failed");
+            }
+            res.cookie("token", token).json(userDoc);
+        });
+
     } else {
       res.status(422).json("Password doesnot match.");
     }
   } else {
     res.status(422).json("not found");
+  }
+}); */
+
+
+userRouter.post("/login", async (req, res) => {
+  const { body } = req;
+  const { email, password } = req.body;
+  
+  try {
+    const userDoc = await findUser({ email });
+    console.log("userDoc ", userDoc);
+
+    if (!userDoc) {
+      return res.status(422).json("User not found");
+    }
+
+    const userToken = await authenticateUser(body);
+    console.log("userToken", userToken);
+
+    if (!userToken) {
+      return res.status(422).json("Password doesn't match");
+    }
+
+    // Get session ID from cookies or request body
+    const sessionId = req.cookies?.sessionId || req.body?.sessionId;
+    
+    // Merge carts if session exists
+    if (sessionId) {
+      try {
+        await mergeUserCartAfterLogin(userDoc._id, sessionId);
+        console.log('Successfully merged carts');
+      } catch (mergeError) {
+        console.error('Cart merge error:', mergeError);
+        // Continue with login even if merge fails
+      }
+    }
+
+    // Generate JWT token
+    jsonwebtoken.sign({
+      email: userDoc.email,
+      _id: userDoc._id,
+      firstName: userDoc.firstName,
+      lastName: userDoc.lastName,
+    }, jwtSecret, {}, (err, token) => {
+      if (err) {
+        console.error("JWT Error:", err);
+        return res.status(500).json("Token generation failed");
+      }
+      
+      // Set cookie and respond
+      res.cookie("token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict'
+      }).json({
+        ...userDoc.toObject(),
+        token
+      });
+    });
+
+  } catch (error) {
+    console.error("Login error:", error);
+    res.status(500).json("Login failed");
   }
 });
 
@@ -105,7 +171,7 @@ userRouter.get("/profile", (req, res) => {
         if (err) throw err;
 
         const { firstName, lastName, _id, email } = await getUserbyId(
-          userData.id
+          userData._id
         );
         res.json({ firstName, lastName, _id, email });
       });

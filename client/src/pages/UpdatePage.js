@@ -1,8 +1,8 @@
 import React from "react";
-import ProfileNav from "../components/ProfileNav";
+import ProfileNav from "../components/ProfileNav.js";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import PhotoUploader from "../components/PhotoUploader";
+import PhotoUploader from "../components/PhotoUploader.js";
 import { Navigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 
@@ -40,7 +40,7 @@ const ProductViewPage = () => {
   }
 
   if (redirect) {
-    return <Navigate to={"/api/products/allProducts"} />;
+    return <Navigate to={"/allProducts"} />;
   }
 
   return (

@@ -1,4 +1,5 @@
-import "./App.css";
+ import "./App.css";
+ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LandingPage from "./pages/LandingPage.js";
 import RegisterPage from "./pages/RegisterPage.js";
@@ -13,10 +14,14 @@ import AddNewProduct from "./pages/AddNewProduct.js";
 import MyListings from "./pages/MyListings.js";
 import UpdatePage from "./pages/UpdatePage.js";
 import DetailViewPage from "./pages/DetailViewPage.js";
-import { CartContextProvider } from "./CartContext.js";
+import {CartContextProvider} from "./CartContext.js";
 import {ShopContextProvider} from "./ShopContext.js";
 import CartPage from "./pages/CartPage.js";
 import ShopCategory from "./pages/ShopCategory.js";
+import Checkout from "./pages/Checkout.js";
+import Payment from "./pages/Payment.js";
+import PaymentSuccess from "./pages/PaymentSuccess.js";
+import OrderHistory from "./pages/OrderHistory.js";
 
 axios.defaults.baseURL = "http://localhost:5555";
 axios.defaults.withCredentials = true;
@@ -32,20 +37,26 @@ function App() {
         <ShopContextProvider>
       <Router>
         <Routes>
-          <Route path="/" element={<Layout />}>
-            <Route index element={<LandingPage />}></Route>
-            <Route path="/api/users/login" element={<LoginPage />}></Route>
-            <Route path="/api/users/register" element={<RegisterPage />}></Route>
-            <Route path="/api/users/profile" element={<ProfilePage />}></Route>
-            <Route path="/api/products/allProducts" element={<AllProducts />}></Route>
-            <Route path="/api/products/myListings" element={<MyListings />}></Route>
-            <Route path="/api/products/myOrders" element={<MyOrder />}></Route>
-            <Route path="/api/products/addNewProduct" element={<AddNewProduct />}></Route>
-            <Route path="/api/products/myListings/:id" element={<UpdatePage />}></Route>
-            <Route path="/api/products/allProducts/:id" element={<DetailViewPage/>}></Route> 
-            <Route path="/api/products/cart" element={<CartPage />}></Route>
-            <Route path="/api/products/:catagory" element={<ShopCategory />}></Route>
+          <Route  path="/" element={<Layout />}>
+            <Route   index   element={<LandingPage />}></Route>
+            <Route path="/login" element={<LoginPage />}></Route>
+            <Route path="/register" element={<RegisterPage />}></Route>
+            <Route path="/profile" element={<ProfilePage />}></Route>
+            <Route path="/allProducts" element={<AllProducts />}></Route>
+            <Route path="/myListings" element={<MyListings />}></Route>
+            <Route path=  "/myOrders" element={<MyOrder />}></Route>
+            <Route path="/addNewProduct" element={<AddNewProduct />}></Route>
+            <Route path="/myListings/:id" element={<UpdatePage />}></Route>
+            <Route path="/allProducts/:id" element={<DetailViewPage/>}></Route> 
+            <Route path="/products/:catagory" element={<ShopCategory />}></Route>
+            <Route path="/products/cart" element={<CartPage />}></Route>            
+            <Route path="/checkout" element={<Checkout />}></Route> 
+            <Route path="/payment" element={<Payment />}></Route> 
+            <Route path="/paymentSuccess" element={<PaymentSuccess />}></Route> 
+            <Route path="/orderHistory" element={<OrderHistory />}></Route> 
+
             
+
           </Route>
         </Routes>
       </Router>

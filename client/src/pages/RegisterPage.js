@@ -29,7 +29,7 @@ async function registerUser(e){
 }
 
 if(redirect){
-  return <Navigate to={'/api/users/login'}/>
+  return <Navigate to={'/login'}/>
 }
 
 

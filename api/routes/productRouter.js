@@ -2,7 +2,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const jsonwebtoken = require("jsonwebtoken");
-const { User, Product } = require("../models/UserModel");
+const { User,Product } = require("../models/UserModel");
 const toId = mongoose.Types.ObjectId;
 
 const {
@@ -11,7 +11,9 @@ const {
   createProduct,
   updateProduct,
   getProductsBySellerId,
+  getProductsByCatagory,
 } = require("../services/productService");
+const UserModel = require("../models/UserModel");
 
 const productRouter = express.Router();
 
@@ -116,26 +118,41 @@ productRouter.post("/addNewProduct", (req, res) => {
     const { title, catagory, addedPhotos, price, description } = req.body;
     const jwtSecret = " asldkfjlskdjfad this is jwtSecret.";
 
-    const productInfo = jsonwebtoken.verify(
-      token,
-      jwtSecret,
-      {},
-      async (err, userData) => {
-        if (err) throw err;
-        const seller = userData.id;
-        const photos = addedPhotos;
-        const productDoc = await createProduct({
-          seller,
-          title,
-          catagory,
-          photos,
-          price,
-          description,
-        });
-        console.log("created product", productDoc);
+     console.log('Token received:', token);
+    
+    // First, just decode without verification to see the payload
+    const decoded = jsonwebtoken.decode(token);
+    console.log('Decoded seller  token payload:', decoded);
+
+    jsonwebtoken.verify(token, jwtSecret, {}, async (err, userData) => {
+      if (err) {
+        throw err;
       }
+      
+      console.log('seller Id', userData._id);
+      const seller = userData._id;
+      const photos = addedPhotos;
+      
+      const productDoc = await createProduct({
+        seller,
+        title,
+        catagory,
+        photos,
+        price,
+        description,
+      });
+
+      // Update the user document to include this product reference
+     await UserModel.findByIdAndUpdate(
+      seller,
+      { $push: { products: productDoc._id } },
+      { new: true }
     );
-    res.json('Added New Product to the database');
+      
+      console.log("created product", productDoc);
+      res.json('Added New Product to the database');
+    });
+    
   } catch (error) {
     console.error(error);
     res.status(500).send({
@@ -150,8 +167,9 @@ productRouter.get("/myListings", (req, res) => {
   const jwtSecret = " asldkfjlskdjfad this is jwtSecret.";
 
   jsonwebtoken.verify(token, jwtSecret, {}, async (err, userData) => {
+    console.log('UserData for seller Id ', userData);
     if (err) throw err;
-    const { id } = userData;
+    const  id  = userData._id;
     console.log("user seller by id", id);
 
     const product = await getProductsBySellerId({id});
@@ -187,6 +205,14 @@ productRouter.get("/getProductById", async (req, res) => {
 
 });
 
+productRouter.get('/catagory', async (req, res)=>{
+  const {catagory} = req.body;
+  console.log('product catagory from req body',catagory);
+
+  
+  res.json(await getProductsByCatagory(catagory));
+})
+
 productRouter.put("/myListings/:id", async (req, res) => {
     const productId = req.params.id;
     console.log('productId', req.params.id);
@@ -199,7 +225,7 @@ productRouter.put("/myListings/:id", async (req, res) => {
 
   jsonwebtoken.verify(token, jwtSecret, {}, async (err, userData) => {
     if (err) throw err;
-    const userId = userData.id;                                
+    const userId = userData._id;                                
 
      console.log('userid', userId);
     const productDoc = await getProductById(productId);
@@ -208,7 +234,7 @@ productRouter.put("/myListings/:id", async (req, res) => {
 /*     console.log(productDoc.seller.toString())
     console.log(userData.id ) */
 
-    if (userData.id === productDoc.seller.toString()) {
+    if (userData._id === productDoc.seller.toString()) {
 
 
       const photos = addedPhotos;
@@ -225,7 +251,7 @@ productRouter.put("/myListings/:id", async (req, res) => {
      await  productDoc.save(); */
     
       
-        const userId = userData.id;
+        const userId = userData._id;
         const id = productId;
 
      const updated =  await updateProduct(id,{title, catagory, photos, description, price});  

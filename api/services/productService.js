@@ -3,43 +3,45 @@ const Product = require("../models/ProductModel");
 const ProductModel = require("../models/ProductModel");
 const productId = mongoose.Schema.Types.ObjectId;
 
-const CONNECTION_URI = process.env.MONGODB_CONNECTION_URI;
-
+/* const CONNECTION_URI = process.env.MONGODB_CONNECTION_URI ||'mongodb+srv://bhattaanjana0:anjana123@anjana.zcmelmw.mongodb.net/myCollection?retryWrites=true&w=majority&appName=anjana' ;
+ */
 const getProducts = async () => {
   try {
-    await mongoose.connect(CONNECTION_URI);
 
     return await Product.find();
   } catch (error) {
     console.error(error);
-  } finally {
+  } /* finally {
     await mongoose.connection.close();
-  }
+  } */
 };
 
 const getProductById = async (id) => {
   try {
-    await mongoose.connect(CONNECTION_URI);
 
     return await Product.findById(id);
   } catch (error) {
     console.error(error);
-  } finally {
-    await mongoose.connection.close();
   }
 };
 
 const getProductsBySellerId = async ({ id }) => {
   try {
-    await mongoose.connect(CONNECTION_URI);
 
     return await ProductModel.find({ seller: id });
   } catch (error) {
     console.error(error);
-  } finally {
-    await mongoose.connection.close();
-  }
+  } 
 };
+
+const getProductsByCatagory = async(catagory)=> {
+  try{
+    return await ProductModel.find(catagory);
+
+  }catch(error){
+    console.log(error);
+  }
+}
 
 const createProduct = async ({
   seller,
@@ -50,7 +52,6 @@ const createProduct = async ({
   description,
 }) => {
   try {
-    await mongoose.connect(CONNECTION_URI);
 
     const product = new ProductModel({
       seller,
@@ -65,23 +66,18 @@ const createProduct = async ({
     return product;
   } catch (error) {
     console.error(error);
-  } finally {
-    await mongoose.connection.close();
   }
 };
 
 const updateProduct = async (id, {title, catagory, photos, description, price}) => {
   try {
-    await mongoose.connect(CONNECTION_URI);
 
     const product = await ProductModel.findByIdAndUpdate(id, {title, catagory, photos, description, price});
     return product;
   } catch (error) {
     console.log(error);
     throw error;
-  } finally {
-    await mongoose.connection.close();
-  }
+  } 
 };
 
 module.exports = {
@@ -90,4 +86,5 @@ module.exports = {
   createProduct,
   updateProduct,
   getProductsBySellerId,
+  getProductsByCatagory
 };

@@ -1,9 +1,9 @@
 import React, {  useState } from "react";
 import axios from "axios";
-import PhotoUploader from "../components/PhotoUploader";
+import PhotoUploader from "../components/PhotoUploader.js";
 import { Navigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
-import ProfileNav from "../components/ProfileNav";
+import ProfileNav from "../components/ProfileNav.js";
 
 const AddNewProduct = () => {
   /* const { id } = useParams();
@@ -28,12 +28,17 @@ const AddNewProduct = () => {
   
 
   if (redirect) {
-    return <Navigate to={"/api/products/allProducts"} />;
+    return <Navigate to={"/allProducts"} />;
   }
 
   return (
-    <div className="mt-4">
-      <ProfileNav />
+    <div className=" text-black bg-white center m-auto  border rounded-xl  grid grid-cols-3 gap-2">
+     <div className="ml-2 mt-5">  
+      
+        <ProfileNav/>
+      
+     </div>
+     <div className="mt-4 bg-slate-300 p-5 border rounded-2xl" > 
       <h2 className="text-xl text-center p-3">Add New Product</h2>
       <form onSubmit={NewProduct}>
         <div>
@@ -178,6 +183,7 @@ const AddNewProduct = () => {
 
         <button className="primary m-4">Save</button>
       </form>
+       </div>
     </div>
   );
 };
