@@ -54,7 +54,8 @@ app.use(cookieParser());
 app.use(
     cors({
       credentials: true,
-      origin: "http://localhost:3000",
+      origin: ["http://localhost:3000",
+      "https://ecommerce-nine-chi-w749exhov6.vercel.app/"],
       exposedHeaders: ['set-cookie']
      
     })
