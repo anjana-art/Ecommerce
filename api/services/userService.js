@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const UserModel = require("../models/UserModel");
-const bcrypt = require("bcrypt");
+const bcrypt = require('bcryptjs');
 const jsonwebtoken = require("jsonwebtoken");
 const { MONGODB_CONNECTION_URI } = process.env;
 
