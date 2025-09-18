@@ -23,7 +23,7 @@ import Payment from "./pages/Payment.js";
 import PaymentSuccess from "./pages/PaymentSuccess.js";
 import OrderHistory from "./pages/OrderHistory.js";
 
-axios.defaults.baseURL = "http://localhost:5555";
+axios.defaults.baseURL = "https://ecommerce-api-hpil.onrender.com" || "http://localhost:5555";
 axios.defaults.withCredentials = true;
 
 
