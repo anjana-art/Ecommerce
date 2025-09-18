@@ -1,6 +1,7 @@
 {
  "scripts": {
   "start": "node server.js",
+  "preinstall": "npm rebuild bcrypt --build-from-source",
   "dev": "nodemon server.js",
   "test": "jest --watchAll --detectOpenHandles"
  },
