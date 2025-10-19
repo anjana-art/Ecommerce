@@ -37,7 +37,7 @@ const Product = () => {
                     {product.photos.length > 0 ? (
                       <img
                         className="object-cover w-full h-full transition-transform duration-500 hover:scale-105"
-                        src={"/uploads/" + product.photos[0]}
+                        src={"https://ecommerce-api-hpil.onrender.com/uploads/" + product.photos[0]}
                         alt={product.title}
                       />
                     ) : (

@@ -86,7 +86,7 @@ const DetailViewPage = () => {
                 {mainImage ? (
                   <img
                     className="object-contain h-full w-full"
-                    src={"/uploads/" + mainImage}
+                    src={"https://ecommerce-api-hpil.onrender.com/uploads/" + mainImage}
                     alt={product.title}
                   />
                 ) : (
