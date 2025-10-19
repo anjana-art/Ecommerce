@@ -86,7 +86,7 @@ const DetailViewPage = () => {
                 {mainImage ? (
                   <img
                     className="object-contain h-full w-full"
-                    src={"http://localhost:5555/uploads/" + mainImage}
+                    src={"/uploads/" + mainImage}
                     alt={product.title}
                   />
                 ) : (
